@@ -18,11 +18,11 @@ public class InsertCommand extends Commands {
     public void execute(String[] args, String login) throws SQLException {
         Route routeToAdd;
         if (!SessionManager.isAuthorized(login)) {
-            System.out.println("Ошибка: пользователь не авторизован.");
+            System.err.println("Ошибка: пользователь не авторизован.");
             return;
         }
 
-        if (args.length > 1) {
+        if (args.length > 0) {
             try{
                 String[] information = args[0].split(";");
                 if (information.length < 11){

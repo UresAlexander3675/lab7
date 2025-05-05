@@ -1,9 +1,6 @@
 package org.example.commands;
 
-import org.example.controller.SessionManager;
-import org.example.controller.DataBaseManager;
-import org.example.controller.RouteManager;
-
+import org.example.controller.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -21,7 +18,7 @@ public class ExecuteScriptCommand extends Commands {
     @Override
     public void execute(String[] args, String login) {
         if (!SessionManager.isAuthorized(login)) {
-            System.out.println("Ошибка: пользователь не авторизован.");
+            System.err.println("Ошибка: пользователь не авторизован.");
             return;
         }
 

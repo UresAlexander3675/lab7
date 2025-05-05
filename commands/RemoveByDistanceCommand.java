@@ -13,7 +13,7 @@ public class RemoveByDistanceCommand extends Commands {
     @Override
     public void execute(String[] args, String login) {
         if (!SessionManager.isAuthorized(login)) {
-            System.out.println("Ошибка: пользователь не авторизован.");
+            System.err.println("Ошибка: пользователь не авторизован.");
             return;
         }
 

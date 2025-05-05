@@ -1,9 +1,6 @@
 package org.example.commands;
 
-import org.example.controller.DataBaseManager;
-import org.example.controller.RouteManager;
-import org.example.controller.SessionManager;
-
+import org.example.controller.*;
 import java.util.Scanner;
 
 public class RegisterCommand extends Commands {
@@ -25,7 +22,7 @@ public class RegisterCommand extends Commands {
         if (SessionManager.register(login, password)) {
             System.out.println("Пользователь успешно зарегистрирован.");
         } else {
-            System.out.println("Регистрация не удалась. Возможно, пользователь уже существует.");
+            System.err.println("Регистрация не удалась. Возможно, пользователь уже существует.");
         }
     }
 }

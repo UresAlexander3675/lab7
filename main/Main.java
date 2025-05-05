@@ -1,14 +1,9 @@
 package org.example.main;
 
-import org.example.controller.SessionManager;
+import org.example.controller.*;
 import org.example.commands.*;
-import org.example.controller.DataBaseManager;
-import org.example.controller.RouteManager;
-
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -40,7 +35,7 @@ public class Main {
         System.out.println("Введите команду (help для списка всех команд):");
         while (true) {
 
-            System.out.println("1 — Войти\n2 — Зарегистрироваться");
+            System.out.println("<<1 — Войти\n<<2 — Зарегистрироваться");
             String option = scanner.nextLine().trim();
 
             System.out.print(">>Введите логин: ");
@@ -53,17 +48,17 @@ public class Main {
                 if (SessionManager.login(login, password)) {
                     System.out.println("Вход выполнен.");
                 } else {
-                    System.out.println("Неверный логин или пароль.");
+                    System.err.println("Неверный логин или пароль.");
                 }
             } else if ("2".equals(option)) {
                 if (SessionManager.register(login, password)) {
                     System.out.println("Регистрация прошла успешно. Выполнен вход.");
                     SessionManager.login(login, password);
                 } else {
-                    System.out.println("Ошибка регистрации (возможно, пользователь уже существует).");
+                    System.err.println("Ошибка регистрации (возможно, пользователь уже существует).");
                 }
             } else {
-                System.out.println("Неизвестная опция.");
+                System.err.println("Неизвестная опция.");
             }
 
             System.out.print(">>> ");
@@ -85,7 +80,7 @@ public class Main {
             if (command != null) {
                 command.execute(commandArgs, login);
             } else {
-                System.out.println("Неизвестная команда. Введите 'help' для списка команд.");
+                System.err.println("Неизвестная команда. Введите 'help' для списка команд.");
             }
         }
 
