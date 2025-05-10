@@ -2,12 +2,10 @@ package org.example.main;
 
 import org.example.controller.*;
 import org.example.commands.*;
-import java.sql.SQLException;
 import java.util.*;
 
 public class Main {
-
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         DataBaseManager dataBaseManager = new DataBaseManager();
         SessionManager.initialize(dataBaseManager);
@@ -33,57 +31,72 @@ public class Main {
         commands.put("print_unique_distance", new PrintUniqueDistanceCommand(routeManager, dataBaseManager));
 
         System.out.println("Введите команду (help для списка всех команд):");
-        while (true) {
 
-            System.out.println("<<1 — Войти\n<<2 — Зарегистрироваться");
-            String option = scanner.nextLine().trim();
+        try{
+            while (true) {
+                System.out.println(">1 — Войти\n>2 — Зарегистрироваться");
+                System.out.print(">>");
+                String option = scanner.nextLine().trim();
 
-            System.out.print(">>Введите логин: ");
-            login = scanner.nextLine().trim();
-
-            System.out.print(">>Введите пароль: ");
-            String password = scanner.nextLine().trim();
-
-            if ("1".equals(option)) {
-                if (SessionManager.login(login, password)) {
-                    System.out.println("Вход выполнен.");
-                } else {
-                    System.err.println("Неверный логин или пароль.");
+                if(!option.equals("1") && !option.equals("2")) {
+                    System.err.println("Неизвестное действие. Повторите снова");
+                    continue;
                 }
-            } else if ("2".equals(option)) {
-                if (SessionManager.register(login, password)) {
-                    System.out.println("Регистрация прошла успешно. Выполнен вход.");
-                    SessionManager.login(login, password);
+
+                System.out.print(">>Введите логин: ");
+                login = scanner.nextLine().trim();
+
+                System.out.print(">>Введите пароль: ");
+                String password = scanner.nextLine().trim();
+
+                if (option.equals("1")) {
+                    if (SessionManager.login(login, password)) {
+                        System.out.println("Вход выполнен.");
+                    } else {
+                        System.err.println("Неверный логин или пароль.");
+                        continue;
+                    }
+                } else if (option.equals("2")) {
+                    if (SessionManager.register(login, password)) {
+                        System.out.println("Регистрация прошла успешно. Выполнен вход.");
+                        SessionManager.login(login, password);
+                    } else {
+                        System.err.println("Ошибка регистрации (возможно, пользователь уже существует).");
+                        continue;
+                    }
                 } else {
-                    System.err.println("Ошибка регистрации (возможно, пользователь уже существует).");
+                    System.err.println("Неизвестное действие");
                 }
-            } else {
-                System.err.println("Неизвестная опция.");
+
+                System.out.print(">>> ");
+                if (!scanner.hasNextLine()) {
+                    break;
+                }
+
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = input.split(" ", 2);
+                String commandName = parts[0];
+                String[] commandArgs;
+                if(parts.length > 1){
+                    commandArgs = parts[1].split(" ");
+                } else {
+                    commandArgs = new String[]{};
+                }
+
+                Commands command = commands.get(commandName);
+                if (command != null) {
+                    command.execute(commandArgs, login);
+                } else {
+                    System.err.println("Неизвестная команда. Введите 'help' для списка команд.");
+                }
             }
-
-            System.out.print(">>> ");
-            if (!scanner.hasNextLine()) break;
-
-            String input = scanner.nextLine().trim();
-            if (input.isEmpty()) continue;
-
-            String[] parts = input.split(" ", 2);
-            String commandName = parts[0];
-            String[] commandArgs;
-            if(parts.length > 1){
-                commandArgs = parts[1].split(" ");
-            } else {
-                commandArgs = new String[]{};
-            }
-
-            Commands command = commands.get(commandName);
-            if (command != null) {
-                command.execute(commandArgs, login);
-            } else {
-                System.err.println("Неизвестная команда. Введите 'help' для списка команд.");
-            }
+        } catch (Exception e) {
+            System.err.println("Вы нажали на Ctrl + D");
         }
-
         dataBaseManager.closeConnection();
         scanner.close();
     }

@@ -10,7 +10,7 @@ public class RouteManager {
     private DataBaseManager dataBaseManager;
     private String ownerLogin;
 
-    public RouteManager(DataBaseManager dataBaseManager, String ownerLogin) throws SQLException {
+    public RouteManager(DataBaseManager dataBaseManager, String ownerLogin) throws Exception {
         this.dataBaseManager = dataBaseManager;
         this.linkedHashMap = dataBaseManager.loadRoutesCollection();
         this.ownerLogin = ownerLogin;
